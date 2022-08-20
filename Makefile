@@ -10,7 +10,7 @@ activate:
 install:
 	# install commands
 	conda update conda &&\
-		pip --no-cache-dir install -r requirements.txt
+		conda install --file requirements.txt
 
 build:
 	# build the container: More important for the CI/CD
