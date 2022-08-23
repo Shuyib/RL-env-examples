@@ -22,10 +22,10 @@ start-venv:
 
 build:
 	# build the container: More important for the CI/CD
-	
+	docker build -t RL-environment:v1 .
 	
 run:
 	# run the container
-	
+	docker run RL-environment:v1
 
 all: venv activate install build
