@@ -20,7 +20,7 @@ COPY . /RL
 RUN conda create -n RL-environment python=3.9 anaconda
 
 # activate virtual environment
-CMD source iris-app/bin/activate
+CMD conda activate RL/bin/venv
 
 # upgrade pip
 RUN pip --no-cache-dir install --upgrade pip
