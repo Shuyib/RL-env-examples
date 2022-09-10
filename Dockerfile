@@ -10,7 +10,7 @@ RUN conda env create -f environment.yml
 RUN echo "conda activate RL-environment" >> ~/.bashrc
 SHELL ["/bin/bash", "--login", "-c"]
 
-RUN echo "Make sure flask is installed:"
+RUN echo "Make sure stuff is installed:"
 RUN python -c "import gym"
 RUN python -c "import matplotlib"
 RUN python -c "import numpy"
