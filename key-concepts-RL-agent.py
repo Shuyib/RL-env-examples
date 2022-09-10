@@ -41,7 +41,7 @@ class Environment:
         return maze
 
     def updateMove(self, rowindice, columnindice, maxmoves=[0]):
-        position = np.put(maze, [rowindice, columnindice], 1)
+        position = np.put(maze, [rowindice, columnindice], 2)
         maxmoves[0] += 1
         global maxmoves
         global rowindice, columnindice
