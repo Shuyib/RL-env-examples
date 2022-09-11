@@ -41,4 +41,4 @@ run:
 	# run the container
 	docker run RL-environment:v1
 
-all: venv activate install build
+all: venv activate install build run
