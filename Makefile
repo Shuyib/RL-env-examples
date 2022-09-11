@@ -20,6 +20,19 @@ start-venv:
 	# if the environment.yml is available
 	conda env create --file environment.yml --prefix ./venv --quiet
 
+
+docstrings:
+	# format docstring
+	pyment -w -o numpydoc *.py
+
+format:
+	#format code
+	black *.py 
+
+lint:
+	#flake8 or #pylint
+	pylint --disable=R,C *.py
+
 build:
 	# build the container: More important for the CI/CD
 	docker build -t RL-environment:v1 .
