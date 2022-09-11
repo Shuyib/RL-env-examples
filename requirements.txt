@@ -1,3 +1,6 @@
 gym
 matplotlib
 numpy
+pyment
+black
+pylint
