@@ -10,18 +10,50 @@
 #         self.stateHistory = {action}
 
 # formatted with black
+from pickle import HIGHEST_PROTOCOL
 import numpy as np
 
 
-class Agent:
-    """ This is entity that learns and takes actions to maximize the reward. 
-    Will track its state, make actions and finally make a decision."""
+class Agent(object):
+    """This is entity that learns and takes actions to maximize the reward.
+    Will track its state, make actions and finally make a decision.
 
-    def __init__(self, stateHistory):
-        self.stateHistory = None
+    Parameters
+    ----------
+
+    Returns
+    -------
+
+    """
+
+    def __init__(self, states, alpha):
+        self.stateHistory = None  # will be list of states and rewards
+        self.alpha = alpha
+        self.G = (
+            {}
+        )  # keys will be the states and values estimates of the future rewards.
+        self.initReward(states)
+
+    def initReward(self, states):
+        """Initialize the state of rewards: Goes through each state in a dict.
+        Uses a uniform/binomial distribution
+
+        Parameters
+        ----------
+        states : what has changed that is, the robot position. It ranges
+        between -0.1 and -1.0.
+            
+
+        Returns
+        -------
+        Int64 that is the state of our agent.
+
+        """
+        for state in states:
+            self.G[state] = np.random.uniform(low=-1.0, high=-0.1)
 
     def updateStateHistory(self):
-        """ changes the current state of the agent."""
+        """changes the current state of the agent."""
         pass
 
     def chooseAction(self):
@@ -29,8 +61,17 @@ class Agent:
         pass
 
     def learn(self):
-        """ decision agent takes"""
-        pass
+        """decision agent takes"""
+        target = 0  # we only learn when we beat the maze
+
+        # iterate over reversed state and reward pairs starting from that state
+        # increment target with the reward
+        for prev, reward in reversed(self.stateHistory):
+            self.G[prev] = self.G[prev] + self.alpha * (target - self.G[prev])
+            target += reward
+
+        # zero out agents memory for the next episode
+        self.stateHistory = []
 
 
 # 6*6 maze, Update moves, check if game over, get the state, get rewards, print maze
@@ -76,7 +117,15 @@ class Agent:
 # some similar components to the one above issue contextuatizing the maze and getting ahead of myself.
 class Maze:
     """An RL environment for a robot in a 6 row and 6 column matrix trying to find its way to the objective.
-    obstacles are labelled 1, robot position identity is 2 at the position 0,0 in a tuple."""
+    obstacles are labelled 1, robot position identity is 2 at the position 0,0 in a tuple.
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+
+    """
 
     def __init__(object):
         self.maze = np.zeros(shape=(6, 6))
@@ -88,7 +137,7 @@ class Maze:
         self.robotPosition = (0, 0)  # actual position at start
 
     def printMaze(self):
-        """ for debugging purposes. Let's you see the current state of the maze """
+        """for debugging purposes. Let's you see the current state of the maze"""
         pass
 
     def isAllowedtoMove(self, state, action):
@@ -104,6 +153,7 @@ class Maze:
         Returns
         -------
 
+        
         """
         pass
 
@@ -118,11 +168,12 @@ class Maze:
         Returns
         -------
 
+        
         """
         pass
 
     def isGameOver(self):
-        """ Allows the game to end at some point."""
+        """Allows the game to end at some point."""
         pass
 
     def getState(self):
@@ -140,5 +191,6 @@ class Maze:
         Returns
         -------
 
+        
         """
         pass
