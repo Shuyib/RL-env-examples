@@ -10,7 +10,6 @@
 #         self.stateHistory = {action}
 
 # formatted with black
-from pickle import HIGHEST_PROTOCOL
 import numpy as np
 
 
