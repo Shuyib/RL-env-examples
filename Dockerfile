@@ -1,5 +1,6 @@
 FROM continuumio/miniconda3
 
+# Specify the working directory
 WORKDIR /app
 
 # Create the environment:
@@ -10,10 +11,14 @@ RUN conda env create -f environment.yml
 RUN echo "conda activate RL-environment" >> ~/.bashrc
 SHELL ["/bin/bash", "--login", "-c"]
 
-RUN echo "Make sure stuff is installed:"
+# Test if the dependecies were installed in virtual environment
+RUN echo "Make sure dependecies are installed:"
 RUN python -c "import gym"
 RUN python -c "import matplotlib"
 RUN python -c "import numpy"
-RUN python -c "import pyment"
-RUN python -c "import black"
-RUN python -c "import pylint"
+
+# ENTRYPOINT allows us to specify the default executible
+ENTRYPOINT ["python"]
+
+# CMD sets default arguments to executable which may be overwritten when using docker run
+CMD ["key-concepts-RL-agent.py"]
