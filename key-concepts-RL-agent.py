@@ -5,7 +5,7 @@ A module to handle an RL agent that finds what's the exit of the maze using nump
 import numpy as np
 
 # define the action space: Dictionary tuple
-actionSpace = {"U": (-1.0), "D": (1.0), 'L': (0,-1), 'R':(0,1)}
+actionSpace = {"U": (-1.0), "D": (1.0), "L": (0, -1), "R": (0, 1)}
 
 
 class Agent(object):
@@ -18,12 +18,15 @@ class Agent(object):
     Returns
     -------
 
+    
     """
 
     def __init__(self, states, alpha=0.15, randomFactor=0.2):
-        self.stateHistory = [((0,0),0)] # will be list of states and rewards
+        self.stateHistory = [((0, 0), 0)]  # will be list of states and rewards
         self.alpha = alpha
-        self.randomFactor = randomFactor # spends 20% of time exploring/ 80 % exploiting
+        self.randomFactor = (
+            randomFactor  # spends 20% of time exploring/ 80 % exploiting
+        )
         self.G = (
             {}
         )  # keys will be the states and values estimates of the future rewards.
@@ -36,13 +39,14 @@ class Agent(object):
         Parameters
         ----------
         states : what has changed that is, the robot position. It ranges
-        between -0.1 and -1.0.
-
+            
+        between -0.1 and -1.0. :
+            
 
         Returns
         -------
-        Int64 that is the state of our agent.
 
+        
         """
         for state in states:
             self.G[state] = np.random.uniform(low=-1.0, high=-0.1)
@@ -52,7 +56,19 @@ class Agent(object):
         pass
 
     def chooseAction(self, state, allowedMoves):
-        """controls what action the agent will take."""
+        """controls what action the agent will take.
+
+        Parameters
+        ----------
+        state :
+            
+        allowedMoves :
+            
+
+        Returns
+        -------
+
+        """
         maxG = -10e15
         nextMove = None
         randomN = np.random.random()
@@ -90,6 +106,7 @@ class Maze:
     Returns
     -------
 
+    
     """
 
     def __init__(object):
@@ -111,14 +128,14 @@ class Maze:
         Parameters
         ----------
         state :
-
+            
         action :
-
+            
 
         Returns
         -------
 
-
+        
         """
         pass
 
@@ -128,12 +145,12 @@ class Maze:
         Parameters
         ----------
         action :
-
+            
 
         Returns
         -------
 
-
+        
         """
         pass
 
@@ -151,11 +168,11 @@ class Maze:
         Parameters
         ----------
         state :
-
+            
 
         Returns
         -------
 
-
+        
         """
         pass
