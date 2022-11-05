@@ -4,6 +4,9 @@ A module to handle an RL agent that finds what's the exit of the maze using nump
 
 import numpy as np
 
+# define the action space: Dictionary tuple
+actionSpace = {"U": (-1.0), "D": (1.0), 'L': (0,-1), 'R':(0,1)}
+
 
 class Agent(object):
     """This is entity that learns and takes actions to maximize the reward.
@@ -17,9 +20,10 @@ class Agent(object):
 
     """
 
-    def __init__(self, states, alpha):
-        self.stateHistory = None  # will be list of states and rewards
+    def __init__(self, states, alpha=0.15, randomFactor=0.2):
+        self.stateHistory = [((0,0),0)] # will be list of states and rewards
         self.alpha = alpha
+        self.randomFactor = randomFactor # spends 20% of time exploring/ 80 % exploiting
         self.G = (
             {}
         )  # keys will be the states and values estimates of the future rewards.
@@ -47,9 +51,20 @@ class Agent(object):
         """changes the current state of the agent."""
         pass
 
-    def chooseAction(self):
+    def chooseAction(self, state, allowedMoves):
         """controls what action the agent will take."""
-        pass
+        maxG = -10e15
+        nextMove = None
+        randomN = np.random.random()
+        if randomN < self.randomFactor:
+            nextMove = np.ranom.choice(allowedMoves)
+        else:
+            for action in allowedMoves:
+                newState = tuple([sum(x) for x in zip(state, actionSpace[action])])
+                if self.G[newState] >= maxG:
+                    nextMove = action
+                    maxG = self.G[newState]
+        return nextMove
 
     def learn(self):
         """decision agent takes"""
