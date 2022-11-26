@@ -5,6 +5,7 @@ A module to handle an RL agent that finds what's the exit of the maze using nump
 import numpy as np
 
 # define the action space: Dictionary tuple
+# U means Up, D means down, L means left and R means right
 actionSpace = {"U": (-1.0), "D": (1.0), "L": (0, -1), "R": (0, 1)}
 
 
@@ -24,9 +25,7 @@ class Agent(object):
     def __init__(self, states, alpha=0.15, randomFactor=0.2):
         self.stateHistory = [((0, 0), 0)]  # will be list of states and rewards
         self.alpha = alpha
-        self.randomFactor = (
-            randomFactor  # spends 20% of time exploring/ 80 % exploiting
-        )
+        self.randomFactor = randomFactor  # spends 20% of time exploring/ 80 % exploiting (hyperparameter)
         self.G = (
             {}
         )  # keys will be the states and values estimates of the future rewards.
@@ -53,7 +52,7 @@ class Agent(object):
 
     def updateStateHistory(self):
         """changes the current state of the agent."""
-        pass
+        self.stateHistory.append((state, reward))
 
     def chooseAction(self, state, allowedMoves):
         """controls what action the agent will take.
@@ -73,7 +72,7 @@ class Agent(object):
         nextMove = None
         randomN = np.random.random()
         if randomN < self.randomFactor:
-            nextMove = np.ranom.choice(allowedMoves)
+            nextMove = np.random.choice(allowedMoves)  # controls the next move
         else:
             for action in allowedMoves:
                 newState = tuple([sum(x) for x in zip(state, actionSpace[action])])
@@ -94,6 +93,9 @@ class Agent(object):
 
         # zero out agents memory for the next episode
         self.stateHistory = []
+
+        # run at the end of the maze (reduce the random factor)
+        self.randomFactor -= 10e-5
 
 
 class Maze:
@@ -117,10 +119,24 @@ class Maze:
         self.maze[3, 2] = 1  # np.put(self.maze, [3, 2], 1) wall
         self.maze[0, 0] = 2  # np.put(self.maze, [0,0], 2) robot
         self.robotPosition = (0, 0)  # actual position at start
+        self.steps = 0  # setting the state to be zero
+        self.constructAllowedStates()
 
     def printMaze(self):
-        """for debugging purposes. Let's you see the current state of the maze"""
-        pass
+        """for debugging purposes. Let's you see the current state of the maze.
+        R for the robot, X for the wall and empty space ''.
+        """
+        print("*" * 1000)
+        for row in self.maze:
+            for col in row:
+                if col == 0:
+                    print("", end="\t")
+                elif col == 1:
+                    print("X", end="\t")
+                elif col == 2:
+                    print("R", end="\t")
+            print("\n")
+        print("*" * 1000)
 
     def isAllowedtoMove(self, state, action):
         """Determining if a move is allowed.
@@ -137,14 +153,36 @@ class Maze:
 
         
         """
-        pass
+        y, x = state
+        y += actionSpace[action][0]
+        x += actionSpace[action][1]
+
+        # defining the rules of the maze to prevent issues
+        if y < 0 or x < 0 or y > 5 or x > 5:
+            return False
+        if self.maze[y, x] == 0 or self.maze[y, x] == 2:
+            return True
+        else:
+            return False
+
+    def constructAllowedStates(self):
+        """Defining if every state is allowed"""
+        allowedStates = {}
+        for y, row in enumerate(self.maze):
+            for x, col in enumerate(row):
+                if self.maze([y, x]) != 1:
+                    allowedStates[(y, x)] = []
+                    for action in actionSpace:
+                        if self.isAllowedtoMove([(y, x)], action):
+                            allowedStates([y, x]).append(action)
+        self.allowedStates = allowedStates
 
     def updateMaze(self, action):
         """Updates the maze give the action taken.
 
         Parameters
         ----------
-        action :
+        action : what the robot did.
             
 
         Returns
@@ -152,17 +190,27 @@ class Maze:
 
         
         """
-        pass
+        y, x = self.robotPosition
+        self.maze[y, x] = 0
+        y += actionSpace[action][0]
+        x += actionSpace[action][1]
+        self.robotPosition = (y, x)
+        self.maze[y, x] = 2
+        self.steps += 1
 
     def isGameOver(self):
         """Allows the game to end at some point."""
-        pass
+        if self.robotPosition == (5, 5):
+            return True
+        else:
+            return False
 
-    def getState(self):
+    def getStateAndReward(self):
         """Figuring out the current state of the system."""
-        pass
+        reward = self.giveReward()
+        return self.robotPosition, reward
 
-    def giveReward(self, state):
+    def giveReward(self):
         """Issues reward to the agent based on state of the system.
 
         Parameters
@@ -175,4 +223,7 @@ class Maze:
 
         
         """
-        pass
+        if self.robotPosition == (5, 5):
+            return 0
+        else:
+            return -1
