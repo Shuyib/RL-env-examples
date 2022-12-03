@@ -2,3 +2,4 @@
 * [] Edit Makefile to be able to CI/CD with Github Actions.
 * [] Add test examples from open ai gym.
 * [] Adapt examples to be my own.
+* [] Add the full learning algorithm steps and interpretations to source code.  
