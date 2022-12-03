@@ -13,3 +13,5 @@ Doing some reinforcement learning and a couple of examples. This is the default 
     * Replay memory of previous episode to update G.
     *G state = G<sub>state</sub> + alpha(target - G<sub>state</sub>)*
     
+
+    
