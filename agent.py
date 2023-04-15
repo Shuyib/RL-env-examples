@@ -7,6 +7,7 @@ class Agent(object):
 
     Parameters
     ----------
+    object :
 
     Returns
     -------
@@ -16,7 +17,7 @@ class Agent(object):
 
     def __init__(self, states, alpha=0.15, randomFactor=0.2):
         self.stateHistory = [((0, 0), 0)]  # will be list of states and rewards
-        self.alpha = alpha
+        self.alpha = alpha # learning rate (hyperparameter)
         self.randomFactor = randomFactor  # spends 20% of time exploring/ 80 % exploiting (hyperparameter)
         self.G = (
             {}
