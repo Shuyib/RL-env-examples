@@ -1,10 +1,6 @@
 """The maze running robots environment"""
 import numpy as np
 
-# define the action space: Dictionary tuple
-# U means Up, D means down, L means left and R means right
-actionSpace = {"U": (-1.0), "D": (1.0), "L": (0, -1), "R": (0, 1)}
-
 
 class Maze(object):
     """An RL environment for a robot in a 6 row and 6 column matrix trying to find its way to the objective.
