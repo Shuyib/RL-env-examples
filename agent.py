@@ -1,6 +1,11 @@
 import numpy as np
 
 
+# define the action space: Dictionary tuple
+# U means Up, D means down, L means left and R means right
+actionSpace = {"U": (-1.0), "D": (1.0), "L": (0, -1), "R": (0, 1)}
+
+
 class Agent(object):
     """This is entity that learns and takes actions to maximize the reward.
     Will track its state, make actions and finally make a decision.
@@ -61,17 +66,17 @@ class Agent(object):
         -------
 
         """
-        maxG = -10e15
-        nextMove = None
-        randomN = np.random.random()
-        if randomN < self.randomFactor:
+        maxG = -10e15 # large number for comparison
+        nextMove = None # depends on the maxG
+        randomN = np.random.random() # draw a number from a random distribution 
+        if randomN < self.randomFactor: # compare it with a random factor if it is less
             nextMove = np.random.choice(allowedMoves)  # controls the next move
-        else:
+        else: # otherwise iterate on the allowed moves and construct the states that result
             for action in allowedMoves:
                 newState = tuple([sum(x) for x in zip(state, actionSpace[action])])
-                if self.G[newState] >= maxG:
-                    nextMove = action
-                    maxG = self.G[newState]
+                if self.G[newState] >= maxG: # if the resultant state has a high reward
+                    nextMove = action # pick that action as the next move
+                    maxG = self.G[newState] # setting the best known reward to that reward
         return nextMove
 
     def learn(self):
@@ -83,6 +88,10 @@ class Agent(object):
         for prev, reward in reversed(self.stateHistory):
             self.G[prev] = self.G[prev] + self.alpha * (target - self.G[prev])
             target += reward
+
+        self.stateHistory = []
+
+        self.randomFactor -= 10e-15 # decrease the random factor to switch focus to exploitation
 
         # zero out agents memory for the next episode
         self.stateHistory = []
